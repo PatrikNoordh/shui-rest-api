@@ -64,7 +64,7 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
 The function answers with status 200 and this body:
 
 ```json
-{"message":"Go Serverless v4! Your function executed successfully!"}
+{ "message": "Go Serverless v4! Your function executed successfully!" }
 ```
 
 ## How it works
@@ -88,7 +88,7 @@ exports.hello = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: "Go Serverless v4! Your function executed successfully!",
+      message: 'Go Serverless v4! Your function executed successfully!',
     }),
   };
 };
