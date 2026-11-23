@@ -1,20 +1,71 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: noordh94
-# "service" is the name of this project. This will also be added to your AWS resource names.
-service: shui-rest-api
+org: ${file(./config.yml):org}
+service: shui
 
 provider:
   name: aws
   runtime: nodejs24.x
   architecture: arm64
-  # Uncomment to easily set up a custom domain. Read the docs for more details:
-  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
-  # domain: api.example.com
+  region: eu-north-1
+  iam:
+    role: ${file(./config.yml):role}
 
 functions:
-  hello:
-    handler: handler.hello
+  # Auth
+  register:
+    handler: functions/register/index.handler
     events:
       - httpApi:
-          path: /
-          method: get
+          path: /auth/register
+          method: POST
+  login:
+    handler: functions/login/index.handler
+    events:
+      - httpApi:
+          path: /auth/login
+          method: POST
+
+  # Posts
+  getPosts:
+    handler: functions/getPosts/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: GET
+  getPost:
+    handler: functions/getPost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: GET
+  createPost:
+    handler: functions/createPost/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: POST
+  updatePost:
+    handler: functions/updatePost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: PUT
+  deletePost:
+    handler: functions/deletePost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: DELETE
+
+  # Comments
+  getComments:
+    handler: functions/getComments/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: GET
+  createComment:
+    handler: functions/createComment/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: POST
