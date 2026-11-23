@@ -36,5 +36,5 @@ Tested with curl against the deployed API.
 - [ ] Commits follow `type [SHUI-NNN] Present tense description`
 - [ ] `npm run format:check` passes
 - [ ] `node --check` passes on every changed `.mjs` file
-- [ ] Deployed and tested in Insomnia
+- [ ] Deployed and tested against the live API
 - [ ] No secrets or `config.yml` in the diff
