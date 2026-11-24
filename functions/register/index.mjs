@@ -1,13 +1,22 @@
 /**
- * Placeholder handler for a route that is not implemented.
- * Answers 501 so the route can be deployed and called.
+ * POST /auth/register — creates a new user.
  */
+import middy from '@middy/core';
+import httpJsonBodyParser from '@middy/http-json-body-parser';
+import { validate } from '../../middlewares/validate.mjs';
+import { errorHandler } from '../../middlewares/errorHandler.mjs';
+import { credentialsSchema } from '../../schemas/authSchema.mjs';
+import { registerUser } from '../../services/auth.mjs';
+import { sendResponse } from '../../utils/responses.mjs';
 
 /**
- * @returns 501 with { "error": "Not implemented" }
+ * Registers a user with a unique username and a hashed password.
+ * @returns 201 with { message, username }; 400 / 409 / 500 via errorHandler.
  */
-export const handler = async () => ({
-  statusCode: 501,
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ error: 'Not implemented' }),
-});
+export const handler = middy(async (event) => {
+  const { username } = await registerUser(event.body);
+  return sendResponse(201, { message: 'User registered successfully', username });
+})
+  .use(httpJsonBodyParser())
+  .use(validate(credentialsSchema))
+  .use(errorHandler());
