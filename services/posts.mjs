@@ -1,7 +1,8 @@
 /**
  * Business logic for posts. Knows nothing about HTTP or the Lambda event.
  */
-import { createPost, getAllPosts, getPostsByUsername } from '../db/posts.mjs';
+import { createError } from '@middy/util';
+import { createPost, getAllPosts, getPostById, getPostsByUsername } from '../db/posts.mjs';
 
 /**
  * Creates and saves a new post.
@@ -38,4 +39,20 @@ export const listPosts = async (username) => {
   const posts = await getAllPosts();
 
   return posts.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+};
+
+/**
+ * Gets one post by id.
+ * @param {string} postId
+ * @returns the post
+ * @throws 404 if there is no post with that id
+ */
+export const getPost = async (postId) => {
+  const post = await getPostById(postId);
+
+  if (!post) {
+    throw createError(404, 'Post not found');
+  }
+
+  return post;
 };
