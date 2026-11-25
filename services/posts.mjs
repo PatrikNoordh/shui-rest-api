@@ -2,7 +2,13 @@
  * Business logic for posts. Knows nothing about HTTP or the Lambda event.
  */
 import { createError } from '@middy/util';
-import { createPost, getAllPosts, getPostById, getPostsByUsername } from '../db/posts.mjs';
+import {
+  createPost,
+  getAllPosts,
+  getPostById,
+  getPostsByUsername,
+  updatePost,
+} from '../db/posts.mjs';
 
 /**
  * Creates and saves a new post.
@@ -55,4 +61,18 @@ export const getPost = async (postId) => {
   }
 
   return post;
+};
+
+/**
+ * Changes the title and content of a post and sets updatedAt to now.
+ * @param {string} postId
+ * @param {{ title: string, content: string }} changes
+ * @returns the whole post after the update
+ */
+export const editPost = async (postId, { title, content }) => {
+  return updatePost(postId, {
+    title,
+    content,
+    updatedAt: new Date().toISOString(),
+  });
 };
