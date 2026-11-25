@@ -4,6 +4,7 @@
 import { createError } from '@middy/util';
 import {
   createPost,
+  deletePost,
   getAllPosts,
   getPostById,
   getPostsByUsername,
@@ -75,4 +76,12 @@ export const editPost = async (postId, { title, content }) => {
     content,
     updatedAt: new Date().toISOString(),
   });
+};
+
+/**
+ * Deletes a post.
+ * @param {string} postId
+ */
+export const removePost = async (postId) => {
+  await deletePost(postId);
 };
