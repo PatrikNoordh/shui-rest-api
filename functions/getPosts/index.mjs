@@ -1,13 +1,20 @@
 /**
- * Placeholder handler for a route that is not implemented.
- * Answers 501 so the route can be deployed and called.
+ * GET /posts — lists all posts, or the posts of one user.
  */
+import middy from '@middy/core';
+import { validate } from '../../middlewares/validate.mjs';
+import { errorHandler } from '../../middlewares/errorHandler.mjs';
+import { postsQuerySchema } from '../../schemas/postSchema.mjs';
+import { listPosts } from '../../services/posts.mjs';
+import { sendResponse } from '../../utils/responses.mjs';
 
 /**
- * @returns 501 with { "error": "Not implemented" }
+ * Lists posts, newest first, with an optional ?username= filter.
+ * @returns 200 with an array of posts; 400 / 500 via errorHandler.
  */
-export const handler = async () => ({
-  statusCode: 501,
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ error: 'Not implemented' }),
-});
+export const handler = middy(async (event) => {
+  const posts = await listPosts(event.queryStringParameters.username);
+  return sendResponse(200, posts);
+})
+  .use(validate(postsQuerySchema, 'queryStringParameters'))
+  .use(errorHandler());
