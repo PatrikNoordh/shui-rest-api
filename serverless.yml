@@ -1,20 +1,133 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: noordh94
-# "service" is the name of this project. This will also be added to your AWS resource names.
-service: shui-rest-api
+org: ${file(./config.yml):org}
+service: shui
 
 provider:
   name: aws
   runtime: nodejs24.x
   architecture: arm64
-  # Uncomment to easily set up a custom domain. Read the docs for more details:
-  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
-  # domain: api.example.com
+  region: eu-north-1
+  iam:
+    role: ${file(./config.yml):role}
+  environment:
+    USERS_TABLE: shui-users-${sls:stage}
+    POSTS_TABLE: shui-posts-${sls:stage}
+    COMMENTS_TABLE: shui-comments-${sls:stage}
+    JWT_SECRET: ${file(./config.yml):jwtSecret}
 
 functions:
-  hello:
-    handler: handler.hello
+  # Auth
+  register:
+    handler: functions/auth/register/index.handler
     events:
       - httpApi:
-          path: /
-          method: get
+          path: /auth/register
+          method: POST
+  login:
+    handler: functions/auth/login/index.handler
+    events:
+      - httpApi:
+          path: /auth/login
+          method: POST
+
+  # Posts
+  getPosts:
+    handler: functions/posts/getPosts/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: GET
+  getPost:
+    handler: functions/posts/getPost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: GET
+  createPost:
+    handler: functions/posts/createPost/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: POST
+  updatePost:
+    handler: functions/posts/updatePost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: PUT
+  deletePost:
+    handler: functions/posts/deletePost/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}
+          method: DELETE
+
+  # Comments
+  getComments:
+    handler: functions/comments/getComments/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: GET
+  createComment:
+    handler: functions/comments/createComment/index.handler
+    events:
+      - httpApi:
+          path: /posts/{postId}/comments
+          method: POST
+
+# =================== DB =============================
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: shui-users-${sls:stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: shui-posts-${sls:stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: usernameIndex
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    CommentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: shui-comments-${sls:stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: postId
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: postId
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
