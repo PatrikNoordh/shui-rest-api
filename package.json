@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
-    "format:check": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude"
+    "format:check": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
+    "smoke": "node scripts/smoke-test.mjs"
   },
   "repository": {
     "type": "git",

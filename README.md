@@ -315,6 +315,14 @@ API Gateway → middlewares → handler (functions/) → services/ → db/ → D
 
 ## Testing
 
+Run the smoke test against a deployed URL. It registers two new users, creates, updates and deletes a post, tests a guest post and comments, and prints ✅ or ❌ for each step:
+
+```bash
+BASE_URL=https://yh9bft53dl.execute-api.eu-north-1.amazonaws.com npm run smoke
+```
+
+The command exits with code `1` if any step fails. Each run leaves two `smoke_…` users and one guest post in the tables, because the API cannot delete users or guest posts.
+
 The API is tested with `curl` against the deployed URL. Set the variables once:
 
 ```bash
