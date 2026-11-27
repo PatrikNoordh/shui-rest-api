@@ -12,6 +12,8 @@ import {
 } from '../db/posts.mjs';
 import { deleteCommentsByPostId } from '../db/comments.mjs';
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * Creates and saves a new post.
  * @param {{ username: string, isGuest: boolean, title: string, content: string }} input
@@ -56,6 +58,10 @@ export const listPosts = async (username) => {
  * @throws 404 if there is no post with that id
  */
 export const getPost = async (postId) => {
+  if (!UUID_PATTERN.test(postId)) {
+    throw createError(404, 'Post not found');
+  }
+
   const post = await getPostById(postId);
 
   if (!post) {
