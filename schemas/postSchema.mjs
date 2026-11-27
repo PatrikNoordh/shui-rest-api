@@ -27,7 +27,13 @@ export const postSchema = z.object(
  */
 export const postsQuerySchema = z.strictObject(
   {
-    username: z.string().trim().toLowerCase().min(1, 'Invalid query parameters').optional(),
+    username: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .min(1, 'Invalid query parameters')
+      .max(20, 'Invalid query parameters')
+      .optional(),
   },
   { error: 'Invalid query parameters' },
 );
