@@ -3,12 +3,12 @@
  */
 import middy from '@middy/core';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
-import { authenticate } from '../../middlewares/authenticate.mjs';
-import { validate } from '../../middlewares/validate.mjs';
-import { errorHandler } from '../../middlewares/errorHandler.mjs';
-import { commentSchema } from '../../schemas/commentSchema.mjs';
-import { addComment } from '../../services/comments.mjs';
-import { sendResponse } from '../../utils/responses.mjs';
+import { authenticate } from '../../../middlewares/authenticate.mjs';
+import { validate } from '../../../middlewares/validate.mjs';
+import { errorHandler } from '../../../middlewares/errorHandler.mjs';
+import { commentSchema } from '../../../schemas/commentSchema.mjs';
+import { addComment } from '../../../services/comments.mjs';
+import { sendResponse } from '../../../utils/responses.mjs';
 
 /**
  * Creates a comment as the user in the token.

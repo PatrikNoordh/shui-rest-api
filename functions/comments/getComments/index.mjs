@@ -2,9 +2,9 @@
  * GET /posts/{postId}/comments — anyone can read the comments of a post.
  */
 import middy from '@middy/core';
-import { errorHandler } from '../../middlewares/errorHandler.mjs';
-import { listComments } from '../../services/comments.mjs';
-import { sendResponse } from '../../utils/responses.mjs';
+import { errorHandler } from '../../../middlewares/errorHandler.mjs';
+import { listComments } from '../../../services/comments.mjs';
+import { sendResponse } from '../../../utils/responses.mjs';
 
 /**
  * Lists the comments of one post, oldest first.
