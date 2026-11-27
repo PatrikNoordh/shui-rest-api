@@ -292,13 +292,48 @@ Checks run in a fixed order: token (`401`), then the body (`400`), then the post
 
 ```
 shui-rest-api/
-├── functions/     one folder per Lambda, a short Middy handler
-├── middlewares/   authenticate, authorizePostOwner, validate, errorHandler
-├── schemas/       Zod schemas for the request bodies and the query
-├── services/      business logic, knows nothing about HTTP
-├── db/            the only code that talks to DynamoDB
-├── utils/         response helper, JWT helpers, guest name generator
-└── serverless.yml functions, routes, tables and environment variables
+├── .github/
+│   ├── pull_request_template.md
+│   └── workflows/check.yml          prettier + node --check on every pull request
+├── functions/                       one folder per Lambda, a short Middy handler
+│   ├── auth/
+│   │   ├── register/index.mjs       POST /auth/register
+│   │   └── login/index.mjs          POST /auth/login
+│   ├── posts/
+│   │   ├── getPosts/index.mjs       GET /posts
+│   │   ├── getPost/index.mjs        GET /posts/{postId}
+│   │   ├── createPost/index.mjs     POST /posts
+│   │   ├── updatePost/index.mjs     PUT /posts/{postId}
+│   │   └── deletePost/index.mjs     DELETE /posts/{postId}
+│   └── comments/
+│       ├── getComments/index.mjs    GET /posts/{postId}/comments
+│       └── createComment/index.mjs  POST /posts/{postId}/comments
+├── middlewares/
+│   ├── authenticate.mjs             JWT → event.user, or 401
+│   ├── authorizePostOwner.mjs       owner check → event.post, or 403 / 404
+│   ├── validate.mjs                 Zod schema → 400
+│   └── errorHandler.mjs             every error → { "error": "..." }
+├── schemas/                         Zod schemas
+│   ├── authSchema.mjs
+│   ├── postSchema.mjs
+│   └── commentSchema.mjs
+├── services/                        business logic, knows nothing about HTTP
+│   ├── auth.mjs
+│   ├── posts.mjs
+│   └── comments.mjs
+├── db/                              the only code that talks to DynamoDB
+│   ├── client.mjs                   one DynamoDB client + table names
+│   ├── users.mjs
+│   ├── posts.mjs
+│   └── comments.mjs
+├── utils/
+│   ├── responses.mjs                sendResponse
+│   ├── jwt.mjs                      signToken, verifyToken
+│   └── guestName.mjs                random guest names
+├── scripts/smoke-test.mjs           npm run smoke
+├── config.example.yml               template for config.yml
+├── package.json
+└── serverless.yml                   functions, routes, tables, environment variables
 ```
 
 A request flows through the layers in one direction:
