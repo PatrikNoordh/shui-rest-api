@@ -10,6 +10,7 @@ import {
   getPostsByUsername,
   updatePost,
 } from '../db/posts.mjs';
+import { deleteCommentsByPostId } from '../db/comments.mjs';
 
 /**
  * Creates and saves a new post.
@@ -79,9 +80,11 @@ export const editPost = async (postId, { title, content }) => {
 };
 
 /**
- * Deletes a post.
+ * Deletes a post and all its comments.
+ * The comments go first, so a failure leaves the post in place and the delete can be retried.
  * @param {string} postId
  */
 export const removePost = async (postId) => {
+  await deleteCommentsByPostId(postId);
   await deletePost(postId);
 };
