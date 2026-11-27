@@ -3,11 +3,11 @@
  */
 import middy from '@middy/core';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
-import { validate } from '../../middlewares/validate.mjs';
-import { errorHandler } from '../../middlewares/errorHandler.mjs';
-import { credentialsSchema } from '../../schemas/authSchema.mjs';
-import { loginUser } from '../../services/auth.mjs';
-import { sendResponse } from '../../utils/responses.mjs';
+import { validate } from '../../../middlewares/validate.mjs';
+import { errorHandler } from '../../../middlewares/errorHandler.mjs';
+import { credentialsSchema } from '../../../schemas/authSchema.mjs';
+import { loginUser } from '../../../services/auth.mjs';
+import { sendResponse } from '../../../utils/responses.mjs';
 
 /**
  * Logs a user in.

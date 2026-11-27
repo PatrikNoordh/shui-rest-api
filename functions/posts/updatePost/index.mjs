@@ -3,13 +3,13 @@
  */
 import middy from '@middy/core';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
-import { authenticate } from '../../middlewares/authenticate.mjs';
-import { validate } from '../../middlewares/validate.mjs';
-import { authorizePostOwner } from '../../middlewares/authorizePostOwner.mjs';
-import { errorHandler } from '../../middlewares/errorHandler.mjs';
-import { postSchema } from '../../schemas/postSchema.mjs';
-import { editPost } from '../../services/posts.mjs';
-import { sendResponse } from '../../utils/responses.mjs';
+import { authenticate } from '../../../middlewares/authenticate.mjs';
+import { validate } from '../../../middlewares/validate.mjs';
+import { authorizePostOwner } from '../../../middlewares/authorizePostOwner.mjs';
+import { errorHandler } from '../../../middlewares/errorHandler.mjs';
+import { postSchema } from '../../../schemas/postSchema.mjs';
+import { editPost } from '../../../services/posts.mjs';
+import { sendResponse } from '../../../utils/responses.mjs';
 
 /**
  * Updates the post in the path for its owner.

@@ -2,11 +2,11 @@
  * GET /posts — lists all posts, or the posts of one user.
  */
 import middy from '@middy/core';
-import { validate } from '../../middlewares/validate.mjs';
-import { errorHandler } from '../../middlewares/errorHandler.mjs';
-import { postsQuerySchema } from '../../schemas/postSchema.mjs';
-import { listPosts } from '../../services/posts.mjs';
-import { sendResponse } from '../../utils/responses.mjs';
+import { validate } from '../../../middlewares/validate.mjs';
+import { errorHandler } from '../../../middlewares/errorHandler.mjs';
+import { postsQuerySchema } from '../../../schemas/postSchema.mjs';
+import { listPosts } from '../../../services/posts.mjs';
+import { sendResponse } from '../../../utils/responses.mjs';
 
 /**
  * Lists posts, newest first, with an optional ?username= filter.
